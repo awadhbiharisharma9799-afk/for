@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Anshi 💖</title>
+
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4, #cdb4db);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  position: relative;
+  color: white;
+}
+.card {
+  width: min(560px, 95vw);
+  padding: 28px 18px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 20px 45px rgba(0,0,0,0.22);
+  text-align: center;
+  z-index: 10;
+}
+h1 {
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  margin: 0 0 10px;
+  text-shadow: 0 5px 15px rgba(0,0,0,0.25);
+  min-height: 3.2rem;
+}
+p {
+  margin: 0 0 20px;
+  font-size: clamp(1rem, 3vw, 1.2rem);
+  opacity: 0.95;
+  min-height: 1.6rem;
+}
+.btns {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+button {
+  border: none;
+  padding: 14px 22px;
+  border-radius: 16px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+  touch-action: manipulation;
+}
+button:active { transform: scale(0.95); }
+#yes { background: rgba(255, 77, 109, 0.95); color: white; box-shadow: 0 12px 22px rgba(0,0,0,0.18);}
+#special { background: rgba(255, 255, 255, 0.25); color: white; border: 2px solid rgba(255,255,255,0.25);}
+#no { background: rgba(155, 93, 229, 0.95); color: white; position: fixed; left: 55%; top: 70%; z-index: 12; box-shadow: 0 12px 22px rgba(0,0,0,0.18);}
+#messageBox {
+  display: none;
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(0, 0, 0, 0.18);
+  font-size: clamp(1.1rem, 3.2vw, 1.5rem);
+  animation: pop 0.45s ease-out;
+  position: relative;
+  z-index: 15;
+  overflow: visible;
+  text-align: center;
+}
+@keyframes pop {0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; }}
+.float-emoji { position: fixed; bottom: -40px; opacity: 0.85; pointer-events: none; animation: floatUp linear forwards; z-index: 1; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.15));}
+@keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 0.9; } 100% { transform: translateY(-120vh) scale(1.7); opacity: 0; } }
+.fall { position: fixed; top: -40px; pointer-events: none; animation: fall linear forwards; z-index: 2; }
+@keyframes fall { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(120vh) rotate(360deg); opacity: 0; } }
+.confetti { position: fixed; width: 10px; height: 16px; border-radius: 3px; top: -20px; pointer-events: none; animation: confettiFall linear forwards; z-index: 3; opacity: 0.9;}
+@keyframes confettiFall { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(120vh) rotate(720deg); opacity: 0; } }
+.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 999; padding: 16px; align-items: center; justify-content: center;}
+.modalBox { width: min(460px, 95vw); background: rgba(255,255,255,0.20); backdrop-filter: blur(12px); border-radius: 20px; padding: 18px; text-align: center; box-shadow: 0 20px 45px rgba(0,0,0,0.25);}
+.modalBox h2 { margin: 0 0 10px; font-size: 1.4rem; }
+.modalBox input { width: 100%; padding: 14px 14px; border-radius: 14px; border: none; outline: none; font-size: 1.05rem; margin-top: 10px;}
+.modalBtns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 14px;}
+.modalBtns button { width: 140px;}
+#checkBtn { background: rgba(255, 77, 109, 0.95); color: white;}
+#closeBtn { background: rgba(255, 255, 255, 0.25); color: white; border: 2px solid rgba(255,255,255,0.25);}
+#messageBox.glow { animation: glowPulse 1s ease-in-out infinite alternate; }
+@keyframes glowPulse { 0% { box-shadow: 0 0 15px rgba(255,255,255,0.4); transform: scale(1); } 50% { box-shadow: 0 0 25px rgba(255,255,255,0.8); transform: scale(1.05);} 100% { box-shadow: 0 0 15px rgba(255,255,255,0.4); transform: scale(1); } }
+.spark-heart { position: absolute; font-size: 18px; animation: spark 1.5s linear forwards; pointer-events: none; }
+@keyframes spark { 0% { opacity: 1; transform: translate(0,0) scale(1); } 100% { opacity: 0; transform: translate(calc(var(--x) * 1px), calc(var(--y) * 1px)) scale(1.5); } }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h1 id="question"></h1>
+  <p id="sub"></p>
+  <div class="btns">
+    <button id="yes">Yes ✅</button>
+    <button id="special">Special 💌</button>
+  </div>
+  <div id="messageBox"></div>
+</div>
+
+<button id="no">No ❌</button>
+
+<div class="modal" id="modal">
+  <div class="modalBox">
+    <h2>What’s my nickname? 😏</h2>
+    <input id="nicknameInput" placeholder="Type here..." />
+    <div class="modalBtns">
+      <button id="checkBtn">Check ✅</button>
+      <button id="closeBtn">Close ✖</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const noBtn=document.getElementById("no");
+const yesBtn=document.getElementById("yes");
+const specialBtn=document.getElementById("special");
+const messageBox=document.getElementById("messageBox");
+const question=document.getElementById("question");
+const sub=document.getElementById("sub");
+const modal=document.getElementById("modal");
+const nicknameInput=document.getElementById("nicknameInput");
+const checkBtn=document.getElementById("checkBtn");
+const closeBtn=document.getElementById("closeBtn");
+const CORRECT_NICKNAME="MJ<3";
+
+// Typewriter
+function typeText(el,text,speed=40){el.innerText="";let i=0;const timer=setInterval(()=>{el.innerText+=text[i];i++;if(i>=text.length)clearInterval(timer);},speed);}
+typeText(question,"Do you like me, Anshi? 💖",45);
+setTimeout(()=>typeText(sub,"Just be honest 😌✨",35),900);
+
+// NO button
+let noCount=0;
+function moveNoButton(){noCount++;const scale=Math.max(0.55,1-noCount*0.08);noBtn.style.transform=`scale(${scale})`;const padding=10;const maxX=window.innerWidth-noBtn.offsetWidth-padding;const maxY=window.innerHeight-noBtn.offsetHeight-padding;noBtn.style.left=Math.random()*maxX+"px";noBtn.style.top=Math.random()*maxY+"px";}
+noBtn.addEventListener("mouseover",moveNoButton);
+noBtn.addEventListener("touchstart",e=>{e.preventDefault();moveNoButton();});
+
+// Floating emojis
+const emojis=["💖","✨","😍","😘","❤️","💘","🥰","🌸","🫶","🔥"];
+function createFloatingEmoji(){const emoji=document.createElement("div");emoji.className="float-emoji";emoji.innerText=emojis[Math.floor(Math.random()*emojis.length)];emoji.style.left=Math.random()*window.innerWidth+"px";emoji.style.fontSize=(18+Math.random()*36)+"px";const duration=4+Math.random()*4;emoji.style.animationDuration=duration+"s";document.body.appendChild(emoji);setTimeout(()=>emoji.remove(),duration*1000);}
+setInterval(createFloatingEmoji,240);
+
+// YES clicked
+yesBtn.addEventListener("click",()=>{
+  if(navigator.vibrate) navigator.vibrate([120,60,120]);
+  typeText(question,"AYOOO 😭💖",55);
+  typeText(sub,"Okay... now you’re mine 😏✨",40);
+  messageBox.style.display="block";
+  messageBox.innerText="Now you owe me a date 😌🍦";
+  messageBox.classList.add("glow");
+  noBtn.style.display="none"; yesBtn.style.display="none"; specialBtn.style.display="none";
+  heartExplosion(); fallingHearts(); confetti();
+});
+
+// SPECIAL clicked
+specialBtn.addEventListener("click",()=>{modal.style.display="flex";nicknameInput.value="";nicknameInput.focus();});
+closeBtn.addEventListener("click",()=>{modal.style.display="none";});
+
+// Check nickname
+function checkNickname(){
+  const typed=nicknameInput.value.trim();
+  if(typed.toLowerCase()===CORRECT_NICKNAME.toLowerCase()){
+    modal.style.display="none";
+    messageBox.style.display="block";
+    messageBox.innerText="OMG 😭💖 You got it!!\n\n💖 Unlocked: You’re my favorite person 😌✨";
+    messageBox.classList.add("glow");
+    heartExplosion(); fallingHearts(); confetti(); sparkleHearts();
+  } else { nicknameInput.value=""; nicknameInput.placeholder="Wrong 😭 try again..."; if(navigator.vibrate) navigator.vibrate([80,50,80]); }
+}
+checkBtn.addEventListener("click",checkNickname);
+nicknameInput.addEventListener("keydown",e=>{if(e.key==="Enter")checkNickname();});
+
+// Hearts/confetti
+function heartExplosion(){const burst=["💖","💘","❤️","😍","✨"];for(let i=0;i<30;i++){const h=document.createElement("div");h.innerText=burst[Math.floor(Math.random()*burst.length)];h.style.position="fixed";h.style.left="50%";h.style.top="50%";h.style.transform="translate(-50%,-50%)";h.style.fontSize=(18+Math.random()*28)+"px";h.style.pointerEvents="none";h.style.zIndex=20;document.body.appendChild(h);const xMove=(Math.random()-0.5)*460;const yMove=(Math.random()-0.5)*460;h.animate([{transform:"translate(-50%, -50%) scale(1)",opacity:1},{transform:`translate(${xMove}px, ${yMove}px) scale(1.9)`,opacity:0}],{duration:1400+Math.random()*500,easing:"cubic-bezier(.2,.9,.2,1)"});setTimeout(()=>h.remove(),2200);}}
+function fallingHearts(){const hearts=["❤️","💖","💘","🫶","✨","😍"];for(let i=0;i<40;i++){const h=document.createElement("div");h.className="fall";h.innerText=hearts[Math.floor(Math.random()*hearts.length)];h.style.left=Math.random()*window.innerWidth+"px";h.style.fontSize=(18+Math.random()*34)+"px";const duration=3+Math.random()*3;h.style.animationDuration=duration+"s";document.body.appendChild(h);setTimeout(()=>h.remove(),duration*1000);}}
+function confetti(){for(let i=0;i<60;i++){const c=document.createElement("div");c.className="confetti";c.style.left=Math.random()*window.innerWidth+"px";c.style.height=(10+Math.random()*18)+"px";c.style.width=(6+Math.random()*10)+"px";c.style.background=`hsl(${Math.random()*360},90%,70%)`;const duration=3+Math.random()*3;c.style.animationDuration=duration+"s";document.body.appendChild(c);setTimeout(()=>c.remove(),duration*1000);}}
+
+// Sparkling hearts around message
+function sparkleHearts(){
+  const heartEmojis=["💖","❤️","💘","💕","✨"];
+  for(let i=0;i<40;i++){
+    const h=document.createElement("div");
+    h.className="spark-heart";
+    h.innerText=heartEmojis[Math.floor(Math.random()*heartEmojis.length)];
+    const rect=messageBox.getBoundingClientRect();
+    const xOffset=Math.random()*rect.width-rect.width/2;
+    const yOffset=Math.random()*rect.height-rect.height/2;
+    h.style.left=rect.left+rect.width/2+"px";
+    h.style.top=rect.top+rect.height/2+"px";
+    h.style.setProperty("--x",xOffset);
+    h.style.setProperty("--y",yOffset);
+    h.style.fontSize=(14+Math.random()*18)+"px";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),1500);
+  }
+}
+
+setTimeout(moveNoButton,500);
+modal.addEventListener("click",e=>{if(e.target===modal) modal.style.display="none";});
+</script>
+
+</body>
+</html>
